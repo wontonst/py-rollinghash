@@ -21,54 +21,13 @@ def test_basic():
     assert a.hash == ABCD_HASH
     a.popleft()
     assert a.hash != ABCD_HASH
-    a.appendleft('a')
-    assert first == a.hash
     before_app = a.hash
-    a.append('e')
+    a.push('e')
     assert a.hash != ABCD_HASH
-    a.pop()
-    assert before_app == a.hash
-
-
-def assert_push_append_equality(instr):
-    """
-    Verify that hash generated while pushing is equal when popping back off.
-    :param instr: input string
-    :return: None
-    """
-    mapping = []
-    a = RollingHash()
-    for c in instr:
-        a.append(c)
-        mapping.append(a.hash)
-    for i in xrange(len(instr)):
-        assert a.hash == mapping[len(instr) - 1 - i], "At i={} with str={}".format(i, a._string)
-        a.pop()
-
-    mapping = []
-    a = RollingHash()
-    for c in instr:
-        a.appendleft(c)
-        mapping.append(a.hash)
-    for i in xrange(len(instr)):
-        assert a.hash == mapping[len(instr) - 1 - i], "At i={} with str={}".format(i, a._string)
+    a.push('abcd')
+    for _ in xrange(4):
         a.popleft()
-
-
-def test_push_append_equality():
-    for i in xrange(100):
-        assert_push_append_equality('a'*i)
-    instrs = [
-        'abcdefg',
-        string.printable,
-        string.ascii_letters,
-        string.digits,
-        'a',
-        'a' * 1000,
-    ]
-    for s in instrs:
-        assert_push_append_equality(s)
-
+    assert a.hash == ABCD_HASH
 
 def test_pop_to_empty():
     a = RollingHash('a')
@@ -89,33 +48,32 @@ def assert_no_collisions(instr):
     a = RollingHash()
     visited = set()
     for c in instr:
-        a.append(c)
-        assert a.hash not in visited
+        a.push(c)
+        assert a.hash not in visited, "Collision in push at _string={}".format(a.string)
         visited.add(a.hash)
 
-    for i in xrange(len(instr)):
+    for i in xrange(len(instr) - 2):
         a.popleft()
-        assert a.hash not in visited
+        assert a.hash not in visited, "Collision in pop at _string={}".format(a.string)
         visited.add(a.hash)
 
 
 def test_no_collisions():
-    assert_no_collisions(string.printable * 100)
-    assert_no_collisions('a' * 10000000)
-
+    for i in range(63):
+        assert_no_collisions('abc' * i + ('abc' * i)[::-1])
 
 def assert_push_behavior(s):
     """
-    Test to ensure that hashing from constructor, appending entire string, and one char at a time are equal.
+    Test to ensure that hashing from constructor, pushing entire string, and one char at a time are equal.
     :param s: input string
     :return: None
     """
     a = RollingHash(s)
     b = RollingHash()
     c = RollingHash()
-    b.append(s)
+    b.push(s)
     for ch in s:
-        c.append(ch)
+        c.push(ch)
 
     assert a.hash == b.hash
     assert b.hash == c.hash
