@@ -6,7 +6,7 @@ from rollinghash.rollinghash import RollingHashError,  RollingHash
 
 
 SINGLE_A_HASH = 97
-ABCD_HASH = 1466
+ABCD_HASH = 96807194002
 
 
 def test_nothing_hashable():
@@ -59,7 +59,7 @@ def assert_no_collisions(instr):
 
 
 def test_no_collisions():
-    for i in range(63):
+    for i in range(120):
         assert_no_collisions('abc' * i + ('abc' * i)[::-1])
 
 def assert_push_behavior(s):
@@ -90,3 +90,9 @@ def test_default_equality():
     ]
     for s in instrs:
         assert_push_behavior(s)
+
+def test_pop_multiple():
+    a = RollingHash('abcda')
+    assert a.popleft(4) == SINGLE_A_HASH
+    a = RollingHash('abcda')
+    assert a.popleft(40) is None

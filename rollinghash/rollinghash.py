@@ -5,7 +5,7 @@ import sys
 
 
 DEFAULT_MODULO = sys.maxint/2
-DEFAULT_MULTIPLIER_CONSTANT = 2
+DEFAULT_MULTIPLIER_CONSTANT = 999
 
 
 class RollingHashError(Exception):
@@ -67,7 +67,15 @@ class RollingHash(object):
     def _calculate_single(self, index):
         return (ord(self._string[index]) * self._multiplier**(len(self._string) - 1 - index)) % self._modulo
 
-    def popleft(self):
+    def popleft(self, num=1):
+        if num <= 0:
+            raise RollingHashError('Cannot pop less than 1 value')
+
+        for _ in xrange(min(len(self._string), num) - 1):
+            self._popleft()
+        return self._popleft()
+
+    def _popleft(self):
         self._hash -= self._calculate_single(0) % self._modulo
         self._string.popleft()
         if not self._string:
