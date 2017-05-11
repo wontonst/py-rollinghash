@@ -65,6 +65,7 @@ class RollingHash(object):
         self._hash /= self._multiplier**places
 
     def _calculate_single(self, index):
+        # note: this is the critical section of the code, takes 99.9% of time in push/pop operation
         return (ord(self._string[index]) * self._multiplier**(len(self._string) - 1 - index)) % self._modulo
 
     def popleft(self, num=1):
