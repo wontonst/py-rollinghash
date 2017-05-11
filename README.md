@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/wontonst/py-rollinghash.svg?branch=master)](https://travis-ci.org/wontonst/py-rollinghash)
+
 # RollingHash #
 
 This is a python implementation of a rolling hash function. The implementation
