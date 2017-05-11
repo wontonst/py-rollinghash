@@ -7,7 +7,9 @@ is based off the [wikipedia article](https://en.wikipedia.org/w/index.php?title=
 
 # Installation #
 
-Simply ```pip install /path/to/rollinghash```
+The easiest way to install is simply ```pip install rollinghash```
+
+Alternatively you can clone this repository and run ```pip install /path/to/rollinghash```
 
 # Usage & API #
 
