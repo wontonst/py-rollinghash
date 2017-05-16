@@ -89,11 +89,10 @@ class RollingHash(object):
         self._string += in_str
         return self.hash
 
-
     @property
     def hash(self):
         if not self._string:
-            raise RollingHashError('Nothing to hash')
+            return None
         return self._hash
         
 

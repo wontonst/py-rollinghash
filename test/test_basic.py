@@ -11,8 +11,7 @@ ABCD_HASH = 96807194002
 
 def test_nothing_hashable():
     hash = RollingHash()
-    with raises(RollingHashError, message="Nothing to hash"):
-        hash.hash
+    assert hash.hash is None
 
 
 def test_basic():
@@ -33,8 +32,7 @@ def test_pop_to_empty():
     a = RollingHash('a')
     assert a.hash == SINGLE_A_HASH
     a.popleft()
-    with raises(RollingHashError, message='Nothing to hash'):
-        a.hash
+    assert a.hash is None
     with raises(IndexError, message='pop from an empty deque'):
         a.popleft()
 
